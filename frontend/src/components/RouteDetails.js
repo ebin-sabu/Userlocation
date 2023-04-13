@@ -46,7 +46,6 @@ const RouteDetails = ({route}) => {
 
     return(
         <div id="route-details">
-            <span class="material-icons-outlined">favorite</span>
             <h2>{route.title}</h2> 
             <h3>{route.location}</h3>
             <p>{route.description}</p>
