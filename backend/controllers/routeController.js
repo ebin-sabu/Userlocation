@@ -1,13 +1,13 @@
 // Import model
 const Route = require('../models/routemodel')
+const User = require('../models/userModel')
 
 // Import mongoose
 const mongoose = require('mongoose')
 
 // Get all routes
 const getRoutes = async(req, res) => {
-    //const user_id = req.user._id
-    //const routes = await Route.find({user_id})
+
     const routes = await Route.find({})
     res.status(200).json(routes)
 }
@@ -29,8 +29,25 @@ const likeRoute = async(req, res) => {
     }
     
     res.status(200).json(route)
-    
+}
 
+// Unlikes a single route
+const unLikeRoute = async(req, res) => {
+    const {id} = req.params
+    const user_id = req.user._id
+
+    // Checks to see if id is valid
+    if (!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(404).json({error: 'No such route'})
+    }
+
+    const route = await Route.findOneAndUpdate({_id : id}, {$pull : {likedBy: user_id}})
+
+    if(!route){
+        return res.status(400).json({error: 'No such route'})
+    }
+    
+    res.status(200).json(route)
 }
 
 // Get all LIKED routes
@@ -123,5 +140,6 @@ module.exports = {
     createRoute,
     deleteRoute,
     updateRoute,
-    likeRoute
+    likeRoute,
+    unLikeRoute
 }
